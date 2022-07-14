@@ -2,12 +2,8 @@
 #
 set -eu
 
-### Target
+# Param (test or demo)
 TARGET=${1:-test}
-
-### Remove any old dumps
-
-rm dump_old || true
 
 
 ### Backup from old TEST db
@@ -42,6 +38,12 @@ oc exec fom-db-ha-test-0 -- psql -U $OLD_USER -d $OLD_DB -c "select count (*) fr
 echo "--- $TARGET ---"
 oc exec $POD -- psql -U $NEW_USER -d $NEW_DB -c "select count (*) from pg_tables;"
 
-# Create new db_dump and compare to old one
+# Create new dump, compare to old one and clean up
 oc exec $POD -- pg_dump -d $NEW_DB -U $NEW_USER -Fc -f /tmp/dump_new --no-privileges --no-tablespaces --schema=public --no-owner
 oc exec $POD -- ls -l /tmp/
+
+
+### Cleanup
+oc exec fom-db-ha-test-0 -- rm -rf /tmp/dump
+oc exec $POD -- rm /tmp/dump_new /tmp/dump_old
+rm dump_old
