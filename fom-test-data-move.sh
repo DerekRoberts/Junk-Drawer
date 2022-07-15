@@ -33,9 +33,9 @@ oc exec $POD -- pg_restore -d $NEW_DB /tmp/dump_old -U $NEW_USER -c --no-owner |
 ### Compare
 
 # Tables
-echo "--- old test ---"
+echo "--- old ---"
 oc exec fom-db-ha-test-0 -- psql -U $OLD_USER -d $OLD_DB -c "select count (*) from pg_tables;"
-echo "--- $TARGET ---"
+echo "--- new ---"
 oc exec $POD -- psql -U $NEW_USER -d $NEW_DB -c "select count (*) from pg_tables;"
 
 # Create new dump, compare to old one and clean up
