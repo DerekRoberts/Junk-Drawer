@@ -43,7 +43,7 @@ oc exec -n ${NEW_NS} $POD -- psql -U $NEW_USER -d $NEW_DB -c "select count (*) f
 
 # Create new db_dump and compare to old one
 oc exec -n ${NEW_NS} $POD -- pg_dump -d $NEW_DB -U $NEW_USER -Fc -f /tmp/dump_new --no-privileges --no-tablespaces --no-owner
-oc exec -n ${NEW_NS} $POD -- ls -l /tmp/
+oc exec -n ${NEW_NS} $POD -- ls -lh /tmp/
 
 ### Cleanup
 
